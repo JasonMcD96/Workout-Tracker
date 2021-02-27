@@ -46,39 +46,71 @@ app.get("/api/workouts", (req, res) => {
 })
 
 app.put("/api/workouts/:id", (req, res) => {
-    console.log("Updating....")
-    // check for exercise type first? do that later
-    let day =  new Date().setDate(new Date().getDate()-9)
+    let day = new Date().setDate(new Date().getDate() - 9)
+
+    // Cardio exercises
+    if(req.body.type === "cardio") {
+        db.exercise.update(
+            {
+                _id: mongojs.ObjectId(req.params.id)
+            },
+            {
+                $set: { day: day },
+                $push: {
+                    exercises: {
+                        type: req.body.type,
+                        name: req.body.name,
+                        duration: req.body.duration,
+                        distance: req.body.duration,
+                    }
+                }
+            }
+        )
+    }
 
     // resistance exercise
-    db.exercise.update(
-        {
-            _id: mongojs.ObjectId(req.params.id)
-        },
-        {
-            $set: {day: day},
-            $push: {
-                exercises: {
-                    type: req.body.type,
-                    name: req.body.name,
-                    weight: req.body.weight,
-                    sets: req.body.sets,
-                    reps: req.body.reps,
-                    duration: req.body.duration
-                }
+    if (req.body.type === "resistance") {
+        db.exercise.update(
+            {
+                _id: mongojs.ObjectId(req.params.id)
             },
-
-        },
-        (err, data) => {
-            if(err){
-                console.log(data)
-                res.send(err)
-            } else {
-                console.log(data)
-                res.send(data)
+            {
+                $set: { day: day },
+                $push: {
+                    exercises: {
+                        type: req.body.type,
+                        name: req.body.name,
+                        weight: req.body.weight,
+                        sets: req.body.sets,
+                        reps: req.body.reps,
+                        duration: req.body.duration
+                    }
+                },
+            },
+            (err, data) => {
+                if (err) {
+                    console.log(data)
+                    res.send(err)
+                } else {
+                    console.log(data)
+                    res.send(data)
+                }
             }
-        }
-    )
+        )
+    }
+
+
+    // db.exercise.aggregate([
+    //     {
+    //         $set: {
+    //             totalDuration: {
+    //                 $sum: "$exercises.duration"
+    //             }
+    //         },
+    //         $out: "exercises"
+    //     }
+    // ]);
+
     console.log("Done")
 })
 
