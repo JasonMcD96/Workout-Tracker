@@ -35,13 +35,34 @@ app.get("/stats", (req, res) => {
 
 app.get("/api/workouts", (req, res) => {
     console.log("Finding all workouts?")
-    db.exercise.find({}, (err, data) => {
-        if (err) {
-            res.send(err)
-        } else {
-            res.json(data)
+    // db.exercise.find({
+        
+    // }, (err, data) => {
+    //     if (err) {
+    //         res.send(err)
+    //     } else {
+    //         res.json(data)
+    //     }
+    // })
+
+    db.exercise.aggregate([   
+        {
+           $addFields: {
+               "totalDuration": {
+                   $sum: "$exercises.duration"
+               }
+           }
+        }],
+        (err, data) => {
+            if (err) {
+                console.log(data)
+                res.send(err)
+            } else {
+                console.log(data)
+                res.send(data)
+            }
         }
-    })
+    );
     console.log("Done")
 })
 
@@ -99,19 +120,8 @@ app.put("/api/workouts/:id", (req, res) => {
         )
     }
 
+    
 
-    // db.exercise.aggregate([
-    //     {
-    //         $set: {
-    //             totalDuration: {
-    //                 $sum: "$exercises.duration"
-    //             }
-    //         },
-    //         $out: "exercises"
-    //     }
-    // ]);
-
-    console.log("Done")
 })
 
 app.post("/api/workouts", (req, res) => {
