@@ -1,15 +1,12 @@
 const express = require("express");
 const path = require("path")
 const mongojs = require("mongojs");
-
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
-
 const databaseUrl = "workout";
 const collections = ["exercises"];
-
 const db = mongojs(databaseUrl, collections);
 
 db.on("error", error => {
@@ -19,8 +16,6 @@ db.on("error", error => {
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname + "/public/index.html"));
 });
-
-
 
 app.get("/exercise", (req, res) => {
 
@@ -32,8 +27,6 @@ app.get("/stats", (req, res) => {
 });
 
 app.get("/api/workouts", (req, res) => {
-    console.log("Finding all workouts?")
-
     db.exercise.aggregate([   
         {
            $addFields: {
@@ -52,14 +45,17 @@ app.get("/api/workouts", (req, res) => {
             }
         }
     );
-    console.log("Done")
 })
 
 app.put("/api/workouts/:id", (req, res) => {
+
+// Get the current date
     let day = new Date().setDate(new Date().getDate() - 9)
 
-    // Cardio exercises
-    if(req.body.type === "cardio") {
+    // Check the type of exercise
+
+    
+    if(req.body.type === "cardio") { // Cardio exercises
         db.exercise.update(
             {
                 _id: mongojs.ObjectId(req.params.id)
@@ -78,8 +74,7 @@ app.put("/api/workouts/:id", (req, res) => {
         )
     }
 
-    // resistance exercise
-    if (req.body.type === "resistance") {
+    if (req.body.type === "resistance") { // resistance exercise
         db.exercise.update(
             {
                 _id: mongojs.ObjectId(req.params.id)
@@ -111,7 +106,6 @@ app.put("/api/workouts/:id", (req, res) => {
 })
 
 app.post("/api/workouts", (req, res) => {
-    console.log("Adding workout....")
     db.exercise.insert(req.body, (err, data) => {
         if (err) {
             res.send(err);
@@ -119,11 +113,9 @@ app.post("/api/workouts", (req, res) => {
             res.send(data);
         }
     })
-    console.log("Done")
 })
 
 app.get("/api/workouts/range", (req, res) => {
-    console.log("Finding")
     db.exercise.aggregate([   
         {
            $addFields: {
@@ -142,7 +134,6 @@ app.get("/api/workouts/range", (req, res) => {
             }
         }
     );
-    console.log("Done")
 })
 
 app.listen(3000, () => {
