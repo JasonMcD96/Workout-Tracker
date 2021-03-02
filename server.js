@@ -5,6 +5,19 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
+
+let mongoose = require("mongoose")
+
+mongoose.connect(
+    process.env.MONGODB_URI || 'mongodb://localhost/workoutdb',
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useCreateIndex: true,
+      useFindAndModify: false
+    }
+  );
+
 const databaseUrl = "workout";
 const collections = ["exercises"];
 const db = mongojs(databaseUrl, collections);
