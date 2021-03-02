@@ -18,9 +18,9 @@ mongoose.connect(
     }
   );
 
-const databaseUrl = "workout";
-const collections = ["exercises"];
-const db = mongojs(databaseUrl, collections);
+// const databaseUrl = "workout";
+// const collections = ["exercises"];
+// const db = mongojs(databaseUrl, collections);
 
 db.on("error", error => {
     console.log("Database Error:", error);
