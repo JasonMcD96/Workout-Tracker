@@ -18,7 +18,7 @@ mongoose.connect(
     }
   );
 
-const databaseUrl = "workout";
+const databaseUrl = "workoutdb";
 const collections = ["exercises"];
 const db = mongojs(databaseUrl, collections);
 
