@@ -28,22 +28,11 @@ app.get("/exercise", (req, res) => {
 });
 
 app.get("/stats", (req, res) => {
-
-
     res.sendFile(path.join(__dirname + "/public/stats.html"))
 });
 
 app.get("/api/workouts", (req, res) => {
     console.log("Finding all workouts?")
-    // db.exercise.find({
-        
-    // }, (err, data) => {
-    //     if (err) {
-    //         res.send(err)
-    //     } else {
-    //         res.json(data)
-    //     }
-    // })
 
     db.exercise.aggregate([   
         {
@@ -52,7 +41,7 @@ app.get("/api/workouts", (req, res) => {
                    $sum: "$exercises.duration"
                }
            }
-        }],
+        }], 
         (err, data) => {
             if (err) {
                 console.log(data)
@@ -118,10 +107,7 @@ app.put("/api/workouts/:id", (req, res) => {
                 }
             }
         )
-    }
-
-    
-
+    } 
 })
 
 app.post("/api/workouts", (req, res) => {
@@ -138,13 +124,24 @@ app.post("/api/workouts", (req, res) => {
 
 app.get("/api/workouts/range", (req, res) => {
     console.log("Finding")
-    db.exercise.find({}, (err, data) => {
-        if (err) {
-            res.send(err)
-        } else {
-            res.json(data)
+    db.exercise.aggregate([   
+        {
+           $addFields: {
+               "totalDuration": {
+                   $sum: "$exercises.duration"
+               }
+           }
+        }], 
+        (err, data) => {
+            if (err) {
+                console.log(data)
+                res.send(err)
+            } else {
+                console.log(data)
+                res.send(data)
+            }
         }
-    })
+    );
     console.log("Done")
 })
 
