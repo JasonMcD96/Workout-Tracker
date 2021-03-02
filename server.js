@@ -42,7 +42,7 @@ app.get("/stats", (req, res) => {
 });
 
 app.get("/api/workouts", (req, res) => {
-    db.exercise.aggregate([   
+    db.exercises.aggregate([   
         {
            $addFields: {
                "totalDuration": {
@@ -71,7 +71,7 @@ app.put("/api/workouts/:id", (req, res) => {
 
     
     if(req.body.type === "cardio") { // Cardio exercises
-        db.exercise.update(
+        db.exercises.update(
             {
                 _id: mongojs.ObjectId(req.params.id)
             },
@@ -90,7 +90,7 @@ app.put("/api/workouts/:id", (req, res) => {
     }
 
     if (req.body.type === "resistance") { // resistance exercise
-        db.exercise.update(
+        db.exercises.update(
             {
                 _id: mongojs.ObjectId(req.params.id)
             },
@@ -121,7 +121,7 @@ app.put("/api/workouts/:id", (req, res) => {
 })
 
 app.post("/api/workouts", (req, res) => {
-    db.exercise.insert(req.body, (err, data) => {
+    db.exercises.insert(req.body, (err, data) => {
         if (err) {
             res.send(err);
         } else {
@@ -131,7 +131,7 @@ app.post("/api/workouts", (req, res) => {
 })
 
 app.get("/api/workouts/range", (req, res) => {
-    db.exercise.aggregate([   
+    db.exercises.aggregate([   
         {
            $addFields: {
                "totalDuration": {
