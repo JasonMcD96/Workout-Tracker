@@ -21,7 +21,7 @@ mongoose.connect(
   );
 
 const databaseUrl = "workoutdb";
-const collections = ["exercises"];
+const collections = ["exercise"];
 const db = mongojs(databaseUrl, collections);
 
 db.on("error", error => {
