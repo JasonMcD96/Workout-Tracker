@@ -6,6 +6,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
 
+var PORT = process.env.PORT || 3000;
+
 let mongoose = require("mongoose")
 
 mongoose.connect(
@@ -149,6 +151,6 @@ app.get("/api/workouts/range", (req, res) => {
     );
 })
 
-app.listen(3000, () => {
-    console.log("App running on port 3000!");
+app.listen(PORT, () => {
+    console.log("App running on port ", PORT);
 });
